@@ -2,8 +2,6 @@ const express = require("express"),
   controller = require("../controllers/userController");
 
 const router = express.Router();
-const multer = require('multer');
-const upload = multer({ dest: 'uploads/' });
 
 
 /**
@@ -76,8 +74,9 @@ router.post("/register", controller.register);
 router.post("/login", controller.login);
 router.post("/forgot", controller.forgot);
 router.post("/reset", controller.reset);
-router.get("/sheetsToCsv", controller.sheetsToCsv);
-router.post("/uploadtoMinio", upload.single('file'), controller.uploadtoMinio);
-router.get("/downloadfromMinio/:filename", controller.downloadfromMinio);
+router.post("/validate-email", controller.validateEmail);
+router.post("/validate-username", controller.validateUsername);
+router.post("/refresh", controller.refreshAccessToken);
+
 
 module.exports = router;

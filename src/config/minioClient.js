@@ -10,3 +10,22 @@ const minioClient = new Client({
 });
 
 module.exports = minioClient;
+
+
+module.exports.ensureBucketExists = function ensureBucketExists() {
+
+  const bucketName = process.env.MINIO_BUCKET;
+
+  minioClient.bucketExists(bucketName, (err, exists) => {
+    if (err) return console.error('Error checking bucket:', err);
+
+    if (exists) {
+      console.log(`Bucket ${bucketName} already exists.`);
+    } else {
+      minioClient.makeBucket(bucketName, (err) => {
+        if (err) return console.error('Error creating bucket:', err);
+        console.log(`Bucket ${bucketName} created successfully.`);
+      });
+    }
+  });
+}

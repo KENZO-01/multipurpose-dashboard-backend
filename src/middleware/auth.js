@@ -4,10 +4,10 @@ const User = require("../models/User")
 
 module.exports = async (req, res, next) => {
   const authHeader = req.headers.authorization;
-  if (!authHeader) return res.status(401).json({
-    status_code: 401,
-    error: 'unauthorised user'
-  })
+  if (!authHeader) return res.status(403).json({
+      status_code: 403,
+      error: 'Invalid Token'
+    })
 
   const token = authHeader.split(" ")[1]
 
@@ -20,9 +20,9 @@ module.exports = async (req, res, next) => {
     })
     next()
   } catch(err) {
-    res.status(403).json({
-      status_code: 403,
-      error: 'Invalid Token'
-    })
+    res.status(401).json({
+    status_code: 401,
+    error: 'unauthorised user'
+  })
   }
 }

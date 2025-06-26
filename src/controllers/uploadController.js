@@ -20,14 +20,8 @@ exports.uploadFile = async (req, res) => {
       "Content-Type": req.file.mimetype,
     });
 
-    // Remove the temporary file after successful upload
-    fs.unlink(filePath, (err) => {
-      if (err) {
-        console.error("Error removing temporary file:", err);
-      } else {
-        console.log(`Temporary file ${filePath} removed successfully`);
-      }
-    });
+    // Clean up the uploaded file
+    fs.unlinkSync(req.file.path);
 
     res.status(200).json({
       message: "File uploaded successfully",
@@ -35,12 +29,8 @@ exports.uploadFile = async (req, res) => {
     });
   } catch (err) {
     // Clean up the temporary file in case of error
-    if (fs.existsSync(filePath)) {
-      fs.unlink(filePath, (unlinkErr) => {
-        if (unlinkErr) {
-          console.error("Error removing temporary file after upload error:", unlinkErr);
-        }
-      });
+    if (req.file && req.file.path) {
+      fs.unlinkSync(req.file.path).catch(console.error);
     }
     console.error("Upload error:", err);
     res.status(500).json({ error: "Failed to upload file" });
